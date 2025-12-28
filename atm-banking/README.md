@@ -2,10 +2,12 @@
 
 Projeto Back-End robusto em Java que simula um sistema bancário, focado em regras de negócio, persistência de dados e arquitetura desacoplada.
 
-## 🎯 Foco do Projeto: Back-End Independente
-O núcleo desta aplicação foi desenvolvido para ser **totalmente independente da camada de visualização (View)**. 
-* A lógica de negócio está isolada, permitindo que as Views atuais sejam facilmente substituídas por um front-end moderno (como Angular/React) ou integradas num ecossistema **Spring Boot**.
-* O Back-End está pronto para ser exposto como uma API, bastando trocar as classes de interface.
+🎯 Foco do Projeto: Back-End Independente
+O núcleo desta aplicação foi desenvolvido com foco exclusivo na lógica de negócio e persistência no Back-End.
+
+* **Views Apenas para Testes** Toda a parte de visualização (menus e interação via console) foi construída estritamente para fins de teste e validação das funcionalidades. Ela não deve ser levada em consideração como o produto final de interface.
+* **Arquitetura Desacoplada** A lógica está isolada de forma que o sistema possa ser facilmente migrado para uma API REST com Spring Boot ou conectado a front-ends modernos (como Angular/React), bastando descartar as classes de visualização atuais.
+* **Pronto para Evolução** O Back-End funciona de forma autônoma, tratando as regras de saldo, validação de CPF e persistência em MySQL independentemente de como os dados são exibidos.
 
 ## 🚀 Funcionalidades Principais
 * **Gestão de Clientes:** Cadastro com validação de unicidade de CPF (não permite duplicados).
@@ -27,6 +29,7 @@ O núcleo desta aplicação foi desenvolvido para ser **totalmente independente 
 ## 📖 Como rodar
 1. Configure as credenciais do seu **MySQL** no ficheiro de configuração do projeto.
 2. Certifique-se de ter o Maven instalado.
-3. Compile o projeto: 
-   ```bash
-   mvn clean install
+3. Compile o projeto:
+   
+```bash
+ mvn clean install
