@@ -1,5 +1,5 @@
 
-Status: Projeto em evolução 🛠️
+# Sistema Veterinario CRUD com fake DB
 
 🎯 Objetivo
 Este projeto foi desenvolvido com foco educacional para consolidar os seguintes pilares:
