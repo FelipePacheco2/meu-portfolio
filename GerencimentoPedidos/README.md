@@ -29,6 +29,7 @@ A persistência é feita em um banco SQL com três tabelas principais:
 1.  **BD:Pedidos**: Cabeçalho e controle de mesas.
 2.  **BD:ItemPedidos**: Detalhamento dos produtos e status de preparo.
 3.  **BD:Pagamentos**: Registro de transações e finalizações.
+4.  **BD:itens**: Guarda os itens que podem ser pedidos
 
 ---
 
