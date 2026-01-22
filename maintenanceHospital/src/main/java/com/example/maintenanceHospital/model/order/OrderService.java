@@ -3,6 +3,7 @@ package com.example.maintenanceHospital.model.order;
 import com.example.maintenanceHospital.model.heritage.CriticallyHeritage;
 import com.example.maintenanceHospital.model.heritage.StatusOccurrence;
 import com.example.maintenanceHospital.model.people.Employee;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,7 +28,8 @@ public class OrderService {
     @JoinColumn(name = "technicalId")
     private Employee technical;
 
-    @OneToMany(mappedBy = "orderService", cascade = {CascadeType.MERGE})
+    @OneToMany(mappedBy = "orderService", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JsonManagedReference // "Eu gerencio, pode serializar meus filhos"
     private List<Occurrence> occurrences = new ArrayList<>();
 
     @Column(name = "endDate", nullable = false, updatable = false)

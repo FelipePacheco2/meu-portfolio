@@ -3,6 +3,7 @@ package com.example.maintenanceHospital.model.order;
 import com.example.maintenanceHospital.model.heritage.Heritage;
 import com.example.maintenanceHospital.model.heritage.StatusOccurrence;
 import com.example.maintenanceHospital.model.people.Employee;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -47,8 +48,9 @@ public class Occurrence {
     @Column(name = "sector", nullable = false, length = 30)
     private String sector;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_service_id", nullable = true)
+    @JsonBackReference // "Eu sou a volta do loop, não me serialize"
     private OrderService orderService;
 
     @PrePersist

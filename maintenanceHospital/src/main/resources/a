@@ -1,0 +1,54 @@
+http://localhost:8080/Employee/cadastrar
+{
+    "name": "felipe"
+}
+http://localhost:8080/localHospital/cadastrar
+{
+    "name": "Sala-A"
+}
+http://localhost:8080/patrimonio/cadastrar
+{
+    "tag": "AA2",
+    "location": {"id":1},
+    "typeHeritage": {"id":1},
+    "serialNumber": "5000123",
+    "dateBuy": "2024-12-12",
+    "warrantyLimit": "2025-12-12"
+}
+http://localhost:8080/categoria/cadastrar
+{
+    "name": "Ventilação Pulmonar",
+    "description": "UTI Adulto/Pediátrico/Transporte e Emergência"
+}
+http://localhost:8080/TipoPatrimonio/cadastrar
+{
+    "name": "Servo-i / Bennett 980",
+    "category": {"id":1},
+    "critically": "EMERGENCIA",
+    "description": "Ventilador modular de alta performance, pioneiro na ventilação controlada neurologicamente (NAVA) para todos os perfis de pacientes."
+}
+http://localhost:8080/patrimonio/cadastrar
+{
+    "tag": "sss1",
+    "location": {"id":1},
+    "typeHeritage": {"id":1},
+    "serialNumber": "5000123",
+    "dateBuy": "2025-12-12T00:00:00",
+    "warrantyLimit": "2025-12-12T00:00:00"
+}
+http://localhost:8080/occurrence/cadastrar
+{
+    "heritage": {"id":2},
+    "description": "APARELHO NÂO LIGA E È ISSO",
+    "critically": "EMERGENCIA",
+    "applicant": {"id":1},
+    "sector": "sala 1, no corredor b",
+    "status": "PENDENTE"
+}
+http://localhost:8080/os/cadastrar
+{
+    "technical": {"id":1},
+    "occurrences": [{"id":2}],
+    "priority": "EMERGENCIA",
+    "statusService":  "PENDENTE"
+}

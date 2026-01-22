@@ -4,8 +4,10 @@ import com.example.maintenanceHospital.mapperObject.order.OccurrenceDTO;
 import com.example.maintenanceHospital.mapperObject.order.OccurrenceMapper;
 import com.example.maintenanceHospital.mapperObject.order.OrderServiceDTO;
 import com.example.maintenanceHospital.mapperObject.order.OrderServiceMapper;
+import com.example.maintenanceHospital.model.heritage.StatusOccurrence;
 import com.example.maintenanceHospital.model.order.Occurrence;
 import com.example.maintenanceHospital.model.order.OrderService;
+import com.example.maintenanceHospital.repository.order.OccurrenceRepository;
 import com.example.maintenanceHospital.repository.order.OrderServiceRepositoy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,22 +22,15 @@ public class OrderServiceService {
     OrderServiceRepositoy repository;
     @Autowired
     OrderServiceMapper mapper;
+
+
     @Autowired
     OccurrenceService serviceOcc;
+    @Autowired
+    OccurrenceRepository repOco;
 
     public List<OrderServiceDTO> findAll(){
-        List<OrderServiceDTO> orderServicos = mapper.toDTOList(repository.findAll());
-        List<Occurrence> occurrences = new ArrayList<>();
-
-        for(OrderServiceDTO item : orderServicos){
-            for(Occurrence item2 : item.occurrences()){
-                Occurrence occurrence = serviceOcc.findById(item2.getId());
-                occurrences.add(occurrence);
-            } //map leftJoin @query
-        }
-
-
-        return mapper.toDTOList(repository.findAll());
+        return mapper.toDTOList(repository.findAllCompleto());
     }
 
     public OrderServiceDTO create(OrderServiceDTO dto) {
@@ -46,6 +41,10 @@ public class OrderServiceService {
             Occurrence oco = serviceOcc.findById(item.getId());
             occurrences.add(oco);
             entity.setOccurrences(occurrences);
+
+            oco.setStatus(StatusOccurrence.APROVADA);
+            oco.setOrderService(entity);
+            repOco.save(oco);
         }
 
         OrderService savedEntity = repository.save(entity);
