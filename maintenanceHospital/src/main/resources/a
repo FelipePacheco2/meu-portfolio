@@ -9,7 +9,7 @@ http://localhost:8080/localHospital/cadastrar
 http://localhost:8080/patrimonio/cadastrar
 {
     "tag": "AA2",
-    "location": {"id":1},
+    "location": {"id":1},inserts
     "typeHeritage": {"id":1},
     "serialNumber": "5000123",
     "dateBuy": "2024-12-12",
