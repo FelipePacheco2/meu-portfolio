@@ -10,5 +10,4 @@ public interface OrderServiceRepositoy extends JpaRepository<OrderService, Long>
 
     @Query("SELECT DISTINCT o FROM OrderService o LEFT JOIN FETCH o.technical LEFT JOIN FETCH o.occurrences")
     List<OrderService> findAllCompleto();
-
 }

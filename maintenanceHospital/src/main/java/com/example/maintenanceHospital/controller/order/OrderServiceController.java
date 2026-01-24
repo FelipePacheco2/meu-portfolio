@@ -10,21 +10,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("os")
+@RequestMapping("/os")
 public class OrderServiceController {
 
     @Autowired
     OrderServiceService service;
 
     @Transactional
-    @GetMapping("/listar")
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<OrderServiceDTO> findAll(){
         return service.findAll();
     }
 
     @Transactional
-    @PostMapping("/cadastrar")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public OrderServiceDTO create(@RequestBody OrderServiceDTO dto){
         return service.create(dto);

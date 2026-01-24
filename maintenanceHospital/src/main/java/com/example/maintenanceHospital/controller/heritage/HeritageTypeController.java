@@ -9,29 +9,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/TipoPatrimonio")
+@RequestMapping("/tipoPatrimonio")
 public class HeritageTypeController {
 
     @Autowired
     HeritageTypeService service;
 
-    @GetMapping("/listar")
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<HeritageTypeDTO> findAll(){
         return service.findAll();
     }
 
-    @PostMapping("/cadastrar")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public HeritageTypeDTO create(@RequestBody HeritageTypeDTO dto) throws InterruptedException {
         return service.create(dto);
     }
 
-    @PutMapping("/atualizar")
+    @PutMapping()
     @ResponseStatus(HttpStatus.OK)
     public HeritageTypeDTO update(@RequestBody HeritageTypeDTO dto) { return service.update(dto);}
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping()
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         service.delete(id);

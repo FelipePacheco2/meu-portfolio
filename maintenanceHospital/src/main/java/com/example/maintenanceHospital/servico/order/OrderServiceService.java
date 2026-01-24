@@ -9,11 +9,13 @@ import com.example.maintenanceHospital.model.order.Occurrence;
 import com.example.maintenanceHospital.model.order.OrderService;
 import com.example.maintenanceHospital.repository.order.OccurrenceRepository;
 import com.example.maintenanceHospital.repository.order.OrderServiceRepositoy;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceService {
@@ -22,32 +24,26 @@ public class OrderServiceService {
     OrderServiceRepositoy repository;
     @Autowired
     OrderServiceMapper mapper;
-
-
     @Autowired
-    OccurrenceService serviceOcc;
-    @Autowired
-    OccurrenceRepository repOco;
+    OccurrenceService occurrenceService;
 
     public List<OrderServiceDTO> findAll(){
         return mapper.toDTOList(repository.findAllCompleto());
     }
 
+    @Transactional
     public OrderServiceDTO create(OrderServiceDTO dto) {
         OrderService entity = mapper.toEntity(dto);
-        List<Occurrence> occurrences = new ArrayList<>();
+        //Separa os IDs das ocorrências
+        List<Long> occurrenceIds = entity.getOccurrences().stream()
+                .map(Occurrence::getId)
+                .toList();
+        entity.setOccurrences(new ArrayList<>());
+        OrderService saveEntity = repository.save(entity);
 
-        for(Occurrence item : dto.occurrences()){
-            Occurrence oco = serviceOcc.findById(item.getId());
-            occurrences.add(oco);
-            entity.setOccurrences(occurrences);
+        List<Occurrence> approvedOccurrences = occurrenceService.approveAndLink(occurrenceIds, saveEntity);
+        saveEntity.setOccurrences(approvedOccurrences);
 
-            oco.setStatus(StatusOccurrence.APROVADA);
-            oco.setOrderService(entity);
-            repOco.save(oco);
-        }
-
-        OrderService savedEntity = repository.save(entity);
-        return mapper.toDTO(savedEntity);
+        return mapper.toDTO(repository.save(entity));
     }
 }

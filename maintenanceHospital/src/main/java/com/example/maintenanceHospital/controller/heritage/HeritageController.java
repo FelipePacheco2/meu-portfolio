@@ -15,25 +15,25 @@ public class HeritageController {
     @Autowired
     HeritageService service;
 
-    @GetMapping("/listar")
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<HeritageDTO> findAll(){
         return service.findAll();
     }
 
-    @PostMapping("/cadastrar")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public HeritageDTO create(@RequestBody HeritageDTO dto){
         return service.create(dto);
     }
 
-    @PutMapping("/atualizar")
+    @PutMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public HeritageDTO update(@RequestBody HeritageDTO dto){
         return service.update(dto);
     }
 
-    @DeleteMapping("/deletar/{id}")
+    @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         service.delete(id);

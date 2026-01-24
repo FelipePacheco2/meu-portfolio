@@ -15,25 +15,25 @@ public class LocationHospitalController {
     @Autowired
     LocationHospitalService service;
 
-    @GetMapping("/listar")
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<LocationHospitalDTO> findAll(){
         return service.findAll();
     }
 
-    @PostMapping("/cadastrar")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public LocationHospitalDTO create(@RequestBody LocationHospitalDTO dto){
         return  service.create(dto);
     }
 
-    @PutMapping("/atualizar")
+    @PutMapping()
     @ResponseStatus(HttpStatus.OK)
     public LocationHospitalDTO update(@RequestBody LocationHospitalDTO dto){
         return service.update(dto);
     }
 
-    @DeleteMapping("/deletar/{id}")
+    @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         service.delete(id);

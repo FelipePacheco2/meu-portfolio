@@ -10,32 +10,32 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/occurrence")
+@RequestMapping("/ocorrencia")
 public class OccurrenceController {
     @Autowired
     OccurrenceService service;
 
-    @GetMapping("/listar")
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<OccurrenceDTO> findAll(){
         return service.findALl();
     }
 
     @Transactional
-    @PostMapping("/cadastrar")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public OccurrenceDTO create(@RequestBody OccurrenceDTO dto){
         return service.create(dto);
     }
 
     @Transactional
-    @PutMapping("/atualizar")
+    @PutMapping()
     @ResponseStatus(HttpStatus.OK)
     public OccurrenceDTO update(@RequestBody OccurrenceDTO dto){
         return service.update(dto);
     }
 
-    @DeleteMapping("/deletar/{id}")
+    @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         service.delete(id);
