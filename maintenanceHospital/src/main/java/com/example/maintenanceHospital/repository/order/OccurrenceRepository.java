@@ -33,4 +33,16 @@ public interface OccurrenceRepository extends JpaRepository<Occurrence, Long> {
 
     @Query("SELECT COUNT(o) FROM Occurrence o WHERE o.id IN :ids AND o.status = 'PENDENTE' AND o.orderService IS NULL")
     Long countPendingAndAvailable(@Param("ids") List<Long> ids);
+
+    @Query("SELECT DISTINCT o FROM Occurrence o WHERE o.id in :ids AND o.orderService = :order")
+    List<Occurrence> occurrenceSucess(
+            @Param("ids") List<Long> ids,
+            @Param("order") OrderService order
+    );
+
+    @Query("SELECT o FROM Occurrence o WHERE o.id IN :ids AND (o.orderService IS NULL OR o.orderService != :order)")
+    List<Occurrence> findFailedOccurrences(
+            @Param("ids") List<Long> ids,
+            @Param("order") OrderService order
+    );
 }

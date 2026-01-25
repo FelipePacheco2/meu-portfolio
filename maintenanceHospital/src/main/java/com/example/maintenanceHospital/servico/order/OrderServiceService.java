@@ -43,23 +43,19 @@ public class OrderServiceService {
         List<Long> occurrenceIds = entity.getOccurrences().stream()
                 .map(Occurrence::getId)
                 .toList();
-        List<Occurrence> approvedOccurrences = occurrenceService.approveAndLink(occurrenceIds, saveEntity);
 
+            if(occurrenceService.hasPendingOccurrences(occurrenceIds)){
+                entity.setOccurrences(new ArrayList<>());
+                OrderService saveEntity = repository.save(entity);
 
-        entity.setOccurrences(new ArrayList<>());
-        OrderService saveEntity = repository.save(entity);
+                List<Occurrence> approvedOccurrences = occurrenceService.approveAndLink(occurrenceIds, saveEntity);
+                saveEntity.setOccurrences(approvedOccurrences);
 
-        List<Occurrence> approvedOccurrences = occurrenceService.approveAndLink(occurrenceIds, saveEntity);
+                repository.save(saveEntity);
+                entityManager.clear();
+                return mapper.toDTO(repository.findByIdObject(saveEntity.getId()));
+            }
 
-        if (approvedOccurrences == null || approvedOccurrences.isEmpty()) {
-            throw new RuntimeException("Falha ao criar OS: Nenhuma ocorrência disponível. O registro foi cancelado.");
-            return null;
-        }
-
-        saveEntity.setOccurrences(approvedOccurrences);
-        repository.save(saveEntity);
-        entityManager.clear();
-
-        return mapper.toDTO(repository.findByIdObject(saveEntity.getId()));
+        throw new RuntimeException("Erro ao criar OS: Ocorrências inexistentes ou já vinculadas a outra OS. Operação cancelada.");
     }
 }

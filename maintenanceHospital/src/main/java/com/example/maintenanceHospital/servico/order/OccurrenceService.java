@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OccurrenceService {
@@ -60,12 +62,16 @@ public class OccurrenceService {
                 .orElseThrow();
     }
 
+    public void alertAboutLinked(OrderService order, List<Long> occurrenceIds){
+        List<Occurrence> failures = repository.findFailedOccurrences(occurrenceIds, order);
+        if (!failures.isEmpty()) {
+            System.out.println("As seguintes ocorrências falharam: " +
+                    failures.stream().map(Occurrence::getId).toList());
+        }
+    }
+
     // retorna list de ocorrencia aprovada para uma order
     public List<Occurrence> approveAndLink(List<Long> occurrenceIds, OrderService order){
-        if (occurrenceIds == null || occurrenceIds.isEmpty()) {
-            return new ArrayList<>();
-        }
-
         // Executa o UPDATE em massa
         int updatedRows = repository.updateStatusAndLinkOrder(
                 occurrenceIds,
@@ -74,14 +80,12 @@ public class OccurrenceService {
                 StatusOccurrence.PENDENTE
         );
 
-        if (updatedRows < occurrenceIds.size()) {
-            // lança exceção ou apenas loga um aviso
-            System.out.println("Aviso: Algumas ocorrências já estavam vinculadas ou não eram pendentes.");
-        }
-
-        // Busca as ocorrências atualizadas para retornar ao OrderService
-        return repository.findAllById(occurrenceIds);
+        alertAboutLinked(order, occurrenceIds);
+       return repository.occurrenceSucess(occurrenceIds, order);
     }
 
-    public
+    public Boolean hasPendingOccurrences(List<Long> id){
+        return repository.countPendingAndAvailable(id) > 0;
+    }
+
 }
