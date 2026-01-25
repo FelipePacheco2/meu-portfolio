@@ -1,19 +1,11 @@
 http://localhost:8080/Employee/cadastrar
 {
-    "name": "felipe"
+    "name": "felipe",
+    "role" "COORDENADOR_SLA"
 }
 http://localhost:8080/localHospital/cadastrar
 {
     "name": "Sala-A"
-}
-http://localhost:8080/patrimonio/cadastrar
-{
-    "tag": "AA2",
-    "location": {"id":1},inserts
-    "typeHeritage": {"id":1},
-    "serialNumber": "5000123",
-    "dateBuy": "2024-12-12",
-    "warrantyLimit": "2025-12-12"
 }
 http://localhost:8080/categoria/cadastrar
 {

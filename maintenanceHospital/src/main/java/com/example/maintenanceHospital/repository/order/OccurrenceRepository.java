@@ -13,13 +13,24 @@ import java.util.List;
 public interface OccurrenceRepository extends JpaRepository<Occurrence, Long> {
 
     @Query("SELECT DISTINCT o FROM Occurrence o LEFT JOIN o.orderService")
-    List<Occurrence> findAllCompleto();
+    List<Occurrence> findAllFull();
 
-    @Modifying
-    @Query("UPDATE Occurrence o SET o.status = :status, o.orderService = :order WHERE o.id IN :ids")
-    void updateStatusAndLinkOrder(
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE Occurrence o SET o.status = :status, o.orderService = :order " +
+            "WHERE o.id IN :ids " +
+            "AND o.status = :statusPendente " +
+            "AND o.orderService IS NULL")
+    int updateStatusAndLinkOrder(
             @Param("ids") List<Long> ids,
             @Param("order") OrderService order,
-            @Param("status") StatusOccurrence status
+            @Param("status") StatusOccurrence status,
+            @Param("statusPendente") StatusOccurrence statusPendente
     );
+
+
+    @Query("SELECT o FROM Occurrence o LEFT JOIN FETCH o.orderService WHERE o.id in :id")
+    Occurrence findByIdObject(@Param("id") Long id);
+
+    @Query("SELECT COUNT(o) FROM Occurrence o WHERE o.id IN :ids AND o.status = 'PENDENTE' AND o.orderService IS NULL")
+    Long countPendingAndAvailable(@Param("ids") List<Long> ids);
 }

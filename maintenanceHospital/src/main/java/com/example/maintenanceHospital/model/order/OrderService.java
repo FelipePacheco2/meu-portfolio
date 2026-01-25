@@ -3,6 +3,7 @@ package com.example.maintenanceHospital.model.order;
 import com.example.maintenanceHospital.model.heritage.CriticallyHeritage;
 import com.example.maintenanceHospital.model.heritage.StatusOccurrence;
 import com.example.maintenanceHospital.model.people.Employee;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,6 +18,7 @@ import java.util.List;
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class OrderService {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

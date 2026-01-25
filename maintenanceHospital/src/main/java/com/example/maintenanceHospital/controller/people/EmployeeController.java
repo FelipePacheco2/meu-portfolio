@@ -9,22 +9,33 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("Employee")
+@RequestMapping("/Employee")
 public class EmployeeController {
 
     @Autowired
     EmployeeService service;
 
-    @GetMapping("/lista")
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeDTO> findAll(){
         return service.findAll();
     }
 
-    @PostMapping("/cadastrar")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeDTO create(@RequestBody EmployeeDTO dto){
         return service.create(dto);
     }
 
+    @PutMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeDTO update(@RequestBody EmployeeDTO dto) {
+        return service.update(dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id){
+        service.delete(id);
+    }
 }

@@ -4,6 +4,8 @@ import com.example.maintenanceHospital.mapperObject.heritage.HeritageDTO;
 import com.example.maintenanceHospital.mapperObject.heritage.HeritageMapper;
 import com.example.maintenanceHospital.model.heritage.Heritage;
 import com.example.maintenanceHospital.repository.heritage.HeritageRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,23 +19,24 @@ public class HeritageService {
     HeritageRepository repository;
     @Autowired
     HeritageMapper mapper;
-
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public List<HeritageDTO> findAll(){
-        return mapper.toDTOList(repository.findAll());
+        return mapper.toDTOList(repository.findAllFull());
     }
 
-    @Transactional                                    //Problema no retorno, os dados estão sendo salvo no banco e a logica
-    public HeritageDTO create(HeritageDTO dto){       //ja testei o findById, ele só não retorna null nos dados da Fk quando
-        Heritage entity = mapper.toEntity(dto);       //pasamos direto, se não retorna só o id.
-        return mapper.toDTO(repository.save(entity)); //bug de visualização A resolver....
+    @Transactional
+    public HeritageDTO create(HeritageDTO dto){
+        Heritage entitySave = repository.save(mapper.toEntity(dto));
+        entityManager.clear(); // Limpa o cache para forçar o novo SELECT
+        return mapper.toDTO(repository.findByIdObjet(entitySave.getId()));
     }
 
     @Transactional
     public HeritageDTO update(HeritageDTO dto){
-        Heritage entity = mapper.toEntity(dto);
+        Heritage entity = findById(dto.id());
         mapper.updateEntityFromDTO(dto, entity);
-
         return mapper.toDTO(repository.save(findById(entity.getId())));
     }
 

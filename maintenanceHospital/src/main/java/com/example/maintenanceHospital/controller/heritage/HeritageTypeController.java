@@ -1,7 +1,9 @@
 package com.example.maintenanceHospital.controller.heritage;
 
 import com.example.maintenanceHospital.mapperObject.heritage.HeritageTypeDTO;
+import com.example.maintenanceHospital.model.heritage.LocationHospital;
 import com.example.maintenanceHospital.servico.heritage.HeritageTypeService;
+import com.example.maintenanceHospital.servico.heritage.LocationHospitalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +33,7 @@ public class HeritageTypeController {
     @ResponseStatus(HttpStatus.OK)
     public HeritageTypeDTO update(@RequestBody HeritageTypeDTO dto) { return service.update(dto);}
 
-    @DeleteMapping()
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         service.delete(id);

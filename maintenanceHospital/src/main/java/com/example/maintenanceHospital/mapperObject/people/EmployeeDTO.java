@@ -2,6 +2,7 @@ package com.example.maintenanceHospital.mapperObject.people;
 
 public record EmployeeDTO(
     Long id,
-    String name
+    String name,
+    RoleEmployee role
 ){
 }
