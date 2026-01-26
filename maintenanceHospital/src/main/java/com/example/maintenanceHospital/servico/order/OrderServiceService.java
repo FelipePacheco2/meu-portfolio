@@ -56,6 +56,12 @@ public class OrderServiceService {
                 return mapper.toDTO(repository.findByIdObject(saveEntity.getId()));
             }
 
-        throw new RuntimeException("Erro ao criar OS: Ocorrências inexistentes ou já vinculadas a outra OS. Operação cancelada.");
+        throw new RuntimeException("Erro ao criar OS: Ocorrências inexistentes ou já vinculadas jsons outra OS. Operação cancelada.");
+    }
+
+    public OrderServiceDTO update(OrderServiceDTO dto){
+        OrderService entity = mapper.toEntity(dto);
+        mapper.updateEntityFromDTO(dto, entity);
+        return mapper.toDTO(repository.save(entity));
     }
 }

@@ -41,10 +41,8 @@ public class OccurrenceService {
     public OccurrenceDTO update(OccurrenceDTO dto){
         Occurrence entity = findById(dto.id());
         mapper.updateEntityFromDTO(dto, entity);
-        repository.save(entity);
-        return mapper.toDTO(findById(entity.getId()));
+        return mapper.toDTO(repository.save(entity));
     }
-
 
     @Transactional
     public void delete(Long id){
@@ -55,19 +53,6 @@ public class OccurrenceService {
     public Occurrence findById(Long id){
         return repository.findById(id)
                 .orElseThrow();
-    }
-
-    public Occurrence findByID(Long id){
-        return repository.findById(id)
-                .orElseThrow();
-    }
-
-    public void alertAboutLinked(OrderService order, List<Long> occurrenceIds){
-        List<Occurrence> failures = repository.findFailedOccurrences(occurrenceIds, order);
-        if (!failures.isEmpty()) {
-            System.out.println("As seguintes ocorrências falharam: " +
-                    failures.stream().map(Occurrence::getId).toList());
-        }
     }
 
     // retorna list de ocorrencia aprovada para uma order
@@ -87,5 +72,11 @@ public class OccurrenceService {
     public Boolean hasPendingOccurrences(List<Long> id){
         return repository.countPendingAndAvailable(id) > 0;
     }
-
+    public void alertAboutLinked(OrderService order, List<Long> occurrenceIds){
+        List<Occurrence> failures = repository.findFailedOccurrences(occurrenceIds, order);
+        if (!failures.isEmpty()) {
+            System.out.println("As seguintes ocorrências falharam: " +
+                    failures.stream().map(Occurrence::getId).toList());
+        }
+    }
 }

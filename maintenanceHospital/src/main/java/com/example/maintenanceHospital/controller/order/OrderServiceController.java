@@ -29,4 +29,9 @@ public class OrderServiceController {
     public OrderServiceDTO create(@RequestBody OrderServiceDTO dto){
         return service.create(dto);
     }
+
+    @Transactional
+    @PutMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public OrderServiceDTO update(@RequestBody OrderServiceDTO dto){ return  service.update(dto);}
 }

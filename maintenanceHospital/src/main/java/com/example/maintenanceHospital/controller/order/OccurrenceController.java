@@ -34,10 +34,4 @@ public class OccurrenceController {
     public OccurrenceDTO update(@RequestBody OccurrenceDTO dto){
         return service.update(dto);
     }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id){
-        service.delete(id);
-    }
 }

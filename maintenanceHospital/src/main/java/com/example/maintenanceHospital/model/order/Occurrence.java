@@ -50,7 +50,7 @@ public class Occurrence {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_service_id", nullable = true)
-    @JsonBackReference // "Eu sou a volta do loop, não me serialize"
+    @JsonBackReference // "Eu sou jsons volta do loop, não me serialize"
     private OrderService orderService;
 
     @PrePersist

@@ -1,6 +1,7 @@
 package com.example.maintenanceHospital.config;
 
 
+import com.example.maintenanceHospital.mapperObject.people.RoleEmployee;
 import com.example.maintenanceHospital.model.heritage.*;
 import com.example.maintenanceHospital.model.order.Occurrence;
 import com.example.maintenanceHospital.model.order.OrderService;
@@ -70,10 +71,12 @@ public class TesteData implements CommandLineRunner {
                 //criar pessoa
                 Employee employee1 = new Employee();
                 employee1.setName("felipe");
+                employee1.setRole(RoleEmployee.GESTOR_QUALIDADE);
                 employeeRep.save(employee1);
 
                 Employee employee2 = new Employee();
                 employee2.setName("jorge");
+                employee2.setRole(RoleEmployee.COORDENADOR_SLA);
                 employeeRep.save(employee2);
 
                 //criando o tipo do aparelho
@@ -118,7 +121,7 @@ public class TesteData implements CommandLineRunner {
 
                 System.out.println(">>> Banco de dados populado com sucesso!");
             }else{
-            System.out.println(">>> Banco já possui dados. Pulando a semeadura.");
+            System.out.println(">>> Banco já possui dados. Pulando jsons semeadura.");
         }
     }
 }
