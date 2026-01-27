@@ -1,6 +1,6 @@
 package com.example.maintenanceHospital.mapperObject.heritage;
 
-import com.example.maintenanceHospital.mapperObject.order.MapperGeneric;
+import com.example.maintenanceHospital.mapperObject.MapperGeneric;
 import com.example.maintenanceHospital.model.heritage.LocationHospital;
 import org.mapstruct.Mapper;
 

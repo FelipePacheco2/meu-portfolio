@@ -1,4 +1,4 @@
-package com.example.maintenanceHospital.mapperObject.order;
+package com.example.maintenanceHospital.mapperObject;
 
 
 import org.mapstruct.BeanMapping;

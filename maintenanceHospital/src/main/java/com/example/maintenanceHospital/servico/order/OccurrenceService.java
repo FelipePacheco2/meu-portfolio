@@ -30,6 +30,12 @@ public class OccurrenceService {
         return mapper.toDTOList(repository.findAllFull());
     }
 
+    public OccurrenceDTO findById(Long id){
+        Occurrence occurrence = repository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Ordem de Serviço não encontrada"));
+        return mapper.toDTO(occurrence);
+    }
+
     @Transactional
     public OccurrenceDTO create(OccurrenceDTO dto){
         Occurrence entity =  repository.save(mapper.toEntity(dto));
@@ -38,8 +44,8 @@ public class OccurrenceService {
     }
 
     @Transactional
-    public OccurrenceDTO update(OccurrenceDTO dto){
-        Occurrence entity = findById(dto.id());
+    public OccurrenceDTO update(Long id, OccurrenceDTO dto){
+        Occurrence entity = mapper.toEntity(findById(dto.id()));
         mapper.updateEntityFromDTO(dto, entity);
         return mapper.toDTO(repository.save(entity));
     }
@@ -50,12 +56,7 @@ public class OccurrenceService {
     }
 
 
-    public Occurrence findById(Long id){
-        return repository.findById(id)
-                .orElseThrow();
-    }
-
-    // retorna list de ocorrencia aprovada para uma order
+    // retorna lista de ocorrencia aprovada para a order
     public List<Occurrence> approveAndLink(List<Long> occurrenceIds, OrderService order){
         // Executa o UPDATE em massa
         int updatedRows = repository.updateStatusAndLinkOrder(

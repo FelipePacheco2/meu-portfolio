@@ -1,7 +1,6 @@
 package com.example.maintenanceHospital.model.people;
 
 
-import com.example.maintenanceHospital.mapperObject.people.RoleEmployee;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;

@@ -10,7 +10,7 @@ import java.util.List;
 public interface OrderServiceRepositoy extends JpaRepository<OrderService, Long> {
 
     @Query("SELECT DISTINCT o FROM OrderService o LEFT JOIN FETCH o.technical LEFT JOIN FETCH o.occurrences")
-    List<OrderService> findAllCompleto();
+    List<OrderService> findAllFull();
 
     @Query("SELECT o FROM OrderService o LEFT JOIN FETCH o.technical LEFT JOIN FETCH o.occurrences where o.id = :id")
     OrderService findByIdObject(@Param("id") Long id);

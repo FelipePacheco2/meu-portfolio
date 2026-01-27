@@ -1,7 +1,7 @@
 package com.example.maintenanceHospital.config;
 
 
-import com.example.maintenanceHospital.mapperObject.people.RoleEmployee;
+import com.example.maintenanceHospital.model.people.RoleEmployee;
 import com.example.maintenanceHospital.model.heritage.*;
 import com.example.maintenanceHospital.model.order.Occurrence;
 import com.example.maintenanceHospital.model.order.OrderService;

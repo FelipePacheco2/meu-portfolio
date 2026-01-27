@@ -1,37 +1,44 @@
 package com.example.maintenanceHospital.controller.order;
 
+import com.example.maintenanceHospital.assembler.order.OrderServiceAssembler;
 import com.example.maintenanceHospital.mapperObject.order.OrderServiceDTO;
 import com.example.maintenanceHospital.servico.order.OrderServiceService;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/os")
 public class OrderServiceController {
 
-    @Autowired
-    OrderServiceService service;
 
-    @Transactional
+    private final OrderServiceService service;
+    private final OrderServiceAssembler orderServiceAssembler;
+
+    public OrderServiceController(OrderServiceService service, OrderServiceAssembler assembler) {
+        this.service = service;
+        this.orderServiceAssembler = assembler;
+    }
+
     @GetMapping()
-    @ResponseStatus(HttpStatus.OK)
-    public List<OrderServiceDTO> findAll(){
-        return service.findAll();
+    public ResponseEntity<CollectionModel<EntityModel<OrderServiceDTO>>> findAll(){
+        return ResponseEntity.ok(orderServiceAssembler.toCollectionModel(service.findAll()));
     }
 
-    @Transactional
+    @GetMapping("/{id}")
+    public ResponseEntity<EntityModel<OrderServiceDTO>> findById(@PathVariable Long id){
+        return ResponseEntity.ok(orderServiceAssembler.toModel(service.findById(id)));
+    }
+
     @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public OrderServiceDTO create(@RequestBody OrderServiceDTO dto){
-        return service.create(dto);
+    public ResponseEntity<EntityModel<OrderServiceDTO>> create(@RequestBody OrderServiceDTO dto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderServiceAssembler.toModel(service.create(dto)));
     }
 
-    @Transactional
-    @PutMapping()
-    @ResponseStatus(HttpStatus.OK)
-    public OrderServiceDTO update(@RequestBody OrderServiceDTO dto){ return  service.update(dto);}
+    @PutMapping("/{id}")
+    public ResponseEntity<EntityModel<OrderServiceDTO>> update(@PathVariable Long id, @RequestBody OrderServiceDTO dto) {
+        return ResponseEntity.ok(orderServiceAssembler.toModel(service.update(id, dto)));
+    }
 }

@@ -37,7 +37,7 @@ http://localhost:8080/occurrence/cadastrar
     "sector": "sala 1, no corredor b",
     "status": "PENDENTE"
 }
-http://localhost:8080/os/cadastrar
+http://localhost:8080/os
 {
     "technical": {"id":1},
     "occurrences": [{"id":2}],

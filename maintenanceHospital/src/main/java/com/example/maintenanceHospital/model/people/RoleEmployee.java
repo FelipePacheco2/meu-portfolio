@@ -1,4 +1,4 @@
-package com.example.maintenanceHospital.mapperObject.people;
+package com.example.maintenanceHospital.model.people;
 
 public enum RoleEmployee {
         // --- SETOR TÉCNICO (Assistencial e Saúde) ---

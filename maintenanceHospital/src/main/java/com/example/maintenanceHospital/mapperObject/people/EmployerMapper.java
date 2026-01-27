@@ -1,6 +1,6 @@
 package com.example.maintenanceHospital.mapperObject.people;
 
-import com.example.maintenanceHospital.mapperObject.order.MapperGeneric;
+import com.example.maintenanceHospital.mapperObject.MapperGeneric;
 import com.example.maintenanceHospital.model.people.Employee;
 import org.mapstruct.Mapper;
 
