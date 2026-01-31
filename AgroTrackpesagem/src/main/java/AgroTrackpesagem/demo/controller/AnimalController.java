@@ -1,13 +1,13 @@
 package AgroTrackpesagem.demo.controller;
 
 
-import AgroTrackpesagem.demo.assembler.animal.AnimalAssembler;
-import AgroTrackpesagem.demo.mapperDto.animal.AnimalDTO;
-import AgroTrackpesagem.demo.mapperDto.animal.AnimalResponseDTO;
+import AgroTrackpesagem.demo.assembler.AnimalAssembler;
+import AgroTrackpesagem.demo.mapperDto.animal.*;
 import AgroTrackpesagem.demo.service.AnimalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,27 +20,43 @@ public class AnimalController {
     private final AnimalService service;
     private final AnimalAssembler assembler;
 
-    @GetMapping()
+    @GetMapping("/search-all")
     public ResponseEntity<CollectionModel<EntityModel<AnimalResponseDTO>>> listAll(){
         return ResponseEntity.ok(assembler.toCollectionModel(service.findAll()));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<EntityModel<AnimalResponseDTO>> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(assembler.toModel(service.findById(id)));
+    @GetMapping("/{idAnimal}/search")
+    public ResponseEntity<EntityModel<AnimalResponseDTO>> getById(@PathVariable Long idAnimal) {
+        return ResponseEntity.ok(assembler.toModel(service.findById(idAnimal)));
     }
 
-    @PostMapping()
-    public AnimalDTO create(@RequestBody AnimalDTO dto){
-        return service.create(dto);
+    @PostMapping("/register")
+    public ResponseEntity<EntityModel<AnimalResponseDTO>> create(@RequestBody AnimalDTO dto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(assembler.toModel(service.create(dto)));
     }
 
-    @PutMapping("/{idAnimal}/move/{idSurrounded}")
+
+    @PutMapping("/{idAnimal}/update/all")
+    public ResponseEntity<EntityModel<AnimalResponseDTO>> update(@PathVariable Long idAnimal, @RequestBody AnimalUpdateDTO dto){
+        return ResponseEntity.ok(
+                assembler.toModel(service.update(idAnimal, dto)));
+    }
+
+    @PutMapping("/{idAnimal}/move/surrounded")
     public ResponseEntity<EntityModel<AnimalResponseDTO>> moveAnimal(
             @PathVariable Long idAnimal,
-            @PathVariable Long idSurrounded){
+            @RequestBody AnimalSurroundedMoveDTO dto){
         return ResponseEntity.ok(
-                assembler.toModel(service.moveAnimal(idAnimal, idSurrounded))
+                assembler.toModel(service.moveAnimal(idAnimal, dto))
         );
     }
+
+    @PutMapping("/{idAnimal}/update/status")
+    public ResponseEntity<EntityModel<AnimalResponseDTO>> updateStatus(
+            @PathVariable Long idAnimal,
+            @RequestBody UpdateAnimalStatusDTO dto){
+        return ResponseEntity.ok(
+                assembler.toModel(service.updateStatus(idAnimal, dto)));
+    }
+
 }

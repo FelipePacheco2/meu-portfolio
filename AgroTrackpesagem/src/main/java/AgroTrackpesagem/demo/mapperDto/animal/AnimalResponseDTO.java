@@ -1,13 +1,10 @@
 package AgroTrackpesagem.demo.mapperDto.animal;
 
 import AgroTrackpesagem.demo.enums.AnimalStatus;
+import AgroTrackpesagem.demo.enums.Breeds;
 import AgroTrackpesagem.demo.mapperDto.surrounded.SurroundedDTO;
-import AgroTrackpesagem.demo.mapperDto.surrounded.SurroundedResponseDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.hateoas.EntityModel;
 
 import java.time.LocalDate;
 
@@ -17,6 +14,7 @@ public class AnimalResponseDTO {
         private String tagIdentifier;
         private LocalDate birthDate;
         private SurroundedDTO surrounded;
+        private Breeds breed;
         private AnimalStatus status;
 }
 

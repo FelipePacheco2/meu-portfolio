@@ -23,7 +23,8 @@ public class Animal {
     @Column(name="birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @Column(name="breed", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name="breed", nullable = false, length = 20)
     private Breeds breed;
 
     @ManyToOne(fetch = FetchType.LAZY)

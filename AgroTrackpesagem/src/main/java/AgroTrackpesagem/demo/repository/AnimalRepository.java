@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface AnimalRepository extends JpaRepository<Animal, Long> {
-    @Query("Select DISTINCT o From Animal o LEFT JOIN o.surrounded")
+    @Query("Select DISTINCT o From Animal o LEFT JOIN o.surrounded WHERE o.status = 'ACTIVE' ")
     List<Animal> findAllFull();
 
     @Query("Select o FROM Animal o LEFT JOIN o.surrounded where o.id in :id")

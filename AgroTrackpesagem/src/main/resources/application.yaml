@@ -4,6 +4,9 @@ spring:
   output:
     ansi:
       enabled: always
+  jackson:
+    mapper:
+      accept-case-insensitive-enums: true # ignorar se é maiúsculo ou minúsculo em todos os Enums
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/AgroTrackpesagem?useTimezone=true&serverTimezone=UTC
@@ -14,7 +17,7 @@ spring:
     baseline-on-migrate: true # Cria jsons tabela de histórico se ela não existir (evita erros na primeira execução)
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: validate # se for a primeira vez mude para create e certifique que o bd esteja criado
     show-sql: true # Mostra no console o SQL que o Java está fazendo
     properties:
       hibernate:
