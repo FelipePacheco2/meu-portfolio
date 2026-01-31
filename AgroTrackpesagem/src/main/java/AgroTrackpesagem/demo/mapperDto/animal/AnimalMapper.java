@@ -23,6 +23,7 @@ public  interface AnimalMapper extends MapperGeneric<AnimalDTO, Animal>{
     void updateEntityFromDTO(AnimalDTO dto, @MappingTarget Animal entity);
 
     //Converte a Entity para o DTO completo (com o objeto SurroundedDTO)
+    Animal toEntityRes(AnimalResponseDTO dto);
     AnimalResponseDTO toResponseDTO(Animal entity);
     List<AnimalResponseDTO> toResponseDTOList(List<Animal> entities);
 }

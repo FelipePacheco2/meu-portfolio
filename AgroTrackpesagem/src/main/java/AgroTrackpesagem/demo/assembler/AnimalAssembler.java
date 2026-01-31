@@ -27,8 +27,10 @@ public class AnimalAssembler extends RepresentationModelAssemblerSupport<AnimalR
     @Override
     public EntityModel<AnimalResponseDTO> toModel(AnimalResponseDTO dto) {
         EntityModel<AnimalResponseDTO> animalModel = EntityModel.of(dto,
-                linkTo(methodOn(AnimalController.class).getById(dto.getId())).withSelfRel().withType("POST"),
-                linkTo(methodOn(AnimalController.class).listAll()).withRel("all-animals").withType("GET")
+                linkTo(methodOn(AnimalController.class).getById(dto.getId())).withSelfRel().withType("GET"),
+                linkTo(methodOn(AnimalController.class).listAll()).withRel("all-animals").withType("GET"),
+                linkTo(methodOn(AnimalController.class).moveAnimal(dto.getId(), null))
+                        .withRel("move-animal").withType("PUT")
         );
         if (dto.getSurrounded() != null) {
 

@@ -27,8 +27,7 @@ public class AnimalController {
 
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<AnimalResponseDTO>> getById(@PathVariable Long id) {
-        AnimalResponseDTO dto = service.findById(id);
-        return ResponseEntity.ok(assembler.toModel(dto));
+        return ResponseEntity.ok(assembler.toModel(service.findById(id)));
     }
 
     @PostMapping()
@@ -36,4 +35,12 @@ public class AnimalController {
         return service.create(dto);
     }
 
+    @PutMapping("/{idAnimal}/move/{idSurrounded}")
+    public ResponseEntity<EntityModel<AnimalResponseDTO>> moveAnimal(
+            @PathVariable Long idAnimal,
+            @PathVariable Long idSurrounded){
+        return ResponseEntity.ok(
+                assembler.toModel(service.moveAnimal(idAnimal, idSurrounded))
+        );
+    }
 }

@@ -30,4 +30,6 @@ public class SurroundedService {
         return repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("piquete não encontrado com ID: " + id));
     }
+
+
 }
