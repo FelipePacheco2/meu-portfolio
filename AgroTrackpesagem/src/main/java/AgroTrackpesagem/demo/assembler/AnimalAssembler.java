@@ -3,10 +3,10 @@ package AgroTrackpesagem.demo.assembler.animal;
 import AgroTrackpesagem.demo.assembler.surrounded.SurroundedAssembler;
 import AgroTrackpesagem.demo.controller.AnimalController;
 import AgroTrackpesagem.demo.mapperDto.animal.AnimalResponseDTO;
-import AgroTrackpesagem.demo.mapperDto.surrounded.SurroundedDTO;
+import AgroTrackpesagem.demo.mapperDto.surrounded.SurroundedMapper;
 import AgroTrackpesagem.demo.mapperDto.surrounded.SurroundedResponseDTO;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -16,29 +16,31 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Component
 public class AnimalAssembler extends RepresentationModelAssemblerSupport<AnimalResponseDTO, EntityModel<AnimalResponseDTO>> {
     private final SurroundedAssembler surroundedAssembler;
+    private final SurroundedMapper mapper;
 
-    public AnimalAssembler(SurroundedAssembler surroundedAssembler){
+    public AnimalAssembler(SurroundedAssembler surroundedAssembler, SurroundedMapper mapper){
         super(AnimalController.class, (Class<EntityModel<AnimalResponseDTO>>) (Class<?>) EntityModel.class);
         this.surroundedAssembler = surroundedAssembler;
+        this.mapper = mapper;
     }
 
     @Override
     public EntityModel<AnimalResponseDTO> toModel(AnimalResponseDTO dto) {
-
-
-        if(dto.getSurrounded() != null && dto.getSurrounded() instanceof SurroundedResponseDTO){
-            SurroundedResponseDTO rawData = (SurroundedResponseDTO) dto.getSurrounded();
-            dto.setSurrounded(surroundedAssembler.toModel(rawData));
-        }
-        return EntityModel.of(dto,
-                linkTo(methodOn(AnimalController.class).getById(dto.getId())).withSelfRel(),
+        EntityModel<AnimalResponseDTO> animalModel = EntityModel.of(dto,
+                linkTo(methodOn(AnimalController.class).getById(dto.getId())).withSelfRel().withType("GET"),
                 linkTo(methodOn(AnimalController.class).listAll()).withRel("all-animals").withType("GET")
         );
-    }
+        if (dto.getSurrounded() != null) {
 
-    @Override
-    public CollectionModel<EntityModel<AnimalResponseDTO>> toCollectionModel(Iterable<? extends AnimalResponseDTO> entities) {
-        return super.toCollectionModel(entities)
-                .add(linkTo(methodOn(AnimalController.class).listAll()).withSelfRel().withType("GET"));
+            // A gente usa o surroundedAssembler para criar os links daquele objeto
+            EntityModel<SurroundedResponseDTO> surroundedModel =
+                    surroundedAssembler.toModel(mapper.toResponseDTOtoDTO(dto.getSurrounded()));
+
+            animalModel.add(surroundedModel.getRequiredLink(IanaLinkRelations.SELF)
+                    .withRel("surrounded-details"));
+
+        }
+
+        return animalModel;
     }
 }

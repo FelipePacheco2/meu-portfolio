@@ -21,11 +21,9 @@ public class SurroundedAssembler extends RepresentationModelAssemblerSupport<Sur
 
         @Override
         public EntityModel<SurroundedResponseDTO> toModel (SurroundedResponseDTO dto){
-        // O linkTo(methodOn(...)) deve referenciar o AnimalController
-
         return EntityModel.of(dto,
-                linkTo(methodOn(AnimalController.class).getById(dto.getId())).withSelfRel(),
-                linkTo(methodOn(AnimalController.class).listAll()).withRel("all-animals").withType("GET")
+                linkTo(methodOn(SurroundedController.class).getById(dto.getId())).withSelfRel().withType("GET"),
+                linkTo(methodOn(SurroundedController.class).listAll()).withRel("all-animals").withType("GET")
         );
     }
 
