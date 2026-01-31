@@ -3,7 +3,6 @@ package AgroTrackpesagem.demo.service;
 import AgroTrackpesagem.demo.mapperDto.animal.AnimalDTO;
 import AgroTrackpesagem.demo.mapperDto.animal.AnimalMapper;
 import AgroTrackpesagem.demo.mapperDto.animal.AnimalResponseDTO;
-import AgroTrackpesagem.demo.mapperDto.surrounded.SurroundedDTO;
 import AgroTrackpesagem.demo.model.Animal;
 import AgroTrackpesagem.demo.model.Surrounded;
 import AgroTrackpesagem.demo.repository.AnimalRepository;

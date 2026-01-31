@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/animal")
+@RequestMapping("/animals")
 public class AnimalController {
     private final AnimalService service;
     private final AnimalAssembler assembler;
@@ -35,6 +35,5 @@ public class AnimalController {
     public AnimalDTO create(@RequestBody AnimalDTO dto){
         return service.create(dto);
     }
-
 
 }

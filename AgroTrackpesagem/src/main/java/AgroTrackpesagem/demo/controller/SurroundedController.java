@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/piquete")
+@RequestMapping("/piquetes")
 @RequiredArgsConstructor
 public class SurroundedController {
     private final SurroundedService service;

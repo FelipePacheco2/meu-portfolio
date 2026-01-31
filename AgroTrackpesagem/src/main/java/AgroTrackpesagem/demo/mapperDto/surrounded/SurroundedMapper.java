@@ -11,6 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface SurroundedMapper extends MapperGeneric<SurroundedDTO, Surrounded> {
 
+    SurroundedResponseDTO toResponseDTOtoDTO(SurroundedDTO surroundedDTO);
     SurroundedResponseDTO toResponseDTO(Surrounded entity);
     List<SurroundedResponseDTO> toResponseDTOList(List<Surrounded> entities);
 }

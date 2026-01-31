@@ -16,15 +16,7 @@ public class AnimalResponseDTO {
         private Long id;
         private String tagIdentifier;
         private LocalDate birthDate;
-        @JsonIgnore
-        private Object surrounded;
+        private SurroundedDTO surrounded;
         private AnimalStatus status;
-
-        // O Assembler transforma o de cima neste aqui para o JSON final
-        // Use @JsonProperty para que no JSON apareça apenas como "surrounded"
-        @JsonProperty("surrounded")
-        public Object getSurroundedResponse() {
-                return this.surrounded;
-        }
 }
 
