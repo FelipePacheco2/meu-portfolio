@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name="surrounded")
 @Getter @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode @Builder
 @NoArgsConstructor @AllArgsConstructor
 public class Surrounded {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

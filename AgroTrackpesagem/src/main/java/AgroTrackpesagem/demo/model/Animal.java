@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Table(name="animal")
 @Getter @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode @Builder
 @AllArgsConstructor @NoArgsConstructor
 public class Animal {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

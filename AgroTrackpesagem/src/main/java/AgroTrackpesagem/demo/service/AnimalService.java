@@ -19,10 +19,10 @@ public class AnimalService {
     private final AnimalMapper mapper;
 
     public List<AnimalResponseDTO> findAll(){
-        return mapper.toResponseDTOList(repository.findAllFull());
+        return mapper.toResponseDTOList(repository.findAll());
     }
 
-    public AnimalResponseDTO findById(long idAnimal){
+    public AnimalResponseDTO findById(Long idAnimal){
         return mapper.toResponseDTO(isExist(idAnimal));
     }
 
@@ -30,9 +30,7 @@ public class AnimalService {
     public AnimalResponseDTO create(AnimalDTO dto){
         Surrounded surrounded = validateEntryConditions(dto);
         Animal animal = mapper.toEntity(dto);
-        System.out.print(animal.getBreed());
         animal.setSurrounded(surrounded);
-
         return mapper.toResponseDTO(repository.save(animal));
     }
 
@@ -55,7 +53,7 @@ public class AnimalService {
     }
 
     @Transactional
-    public AnimalResponseDTO updateStatus(long idAnimal, UpdateAnimalStatusDTO dto){
+    public AnimalResponseDTO updateStatus(Long idAnimal, UpdateAnimalStatusDTO dto){
         Animal entity = isExist(idAnimal);
 
         if (entity.getStatus() == AnimalStatus.DECEASED) {
@@ -76,7 +74,8 @@ public class AnimalService {
         Surrounded surrounded = surroundedService.isExist(dto.getSurrounded());
 
         if (dto.getStatus() == AnimalStatus.DECEASED) {
-            throw new RuntimeException("Não é possível cadastrar um animal morto.");
+            throw new RuntimeException(
+                    "Não é possivel cadastrar animals falecidos");
         }
 
         long totalAnimal = surrounded.getAnimals().stream()
@@ -84,18 +83,15 @@ public class AnimalService {
                 .count();
 
         if (totalAnimal >= surrounded.getMaxCapacity()) {
-            throw new RuntimeException("O piquete selecionado já atingiu a capacidade máxima.");
+            throw new RuntimeException("O piquete selecionado já atingiu a capacidade máxima");
         }
 
         return surrounded;
     }
 
     public Animal isExist(Long idAnimal){
-        if(!repository.existsById(idAnimal)){
-            throw new RuntimeException("Animal não encotrado com o ID" + idAnimal);
-        }
-
-        return repository.findByIdObject(idAnimal);
+        return repository.findById(idAnimal)
+                .orElseThrow(() -> new RuntimeException("Animal não encontrado com o ID " + idAnimal));
     }
 
 
