@@ -3,14 +3,13 @@ package AgroTrackpesagem.demo.service;
 import AgroTrackpesagem.demo.enums.AnimalStatus;
 import AgroTrackpesagem.demo.enums.Breeds;
 import AgroTrackpesagem.demo.enums.PaddockType;
-import AgroTrackpesagem.demo.mapperDto.animal.AnimalDTO;
-import AgroTrackpesagem.demo.mapperDto.animal.AnimalMapper;
-import AgroTrackpesagem.demo.mapperDto.animal.AnimalResponseDTO;
-import AgroTrackpesagem.demo.mapperDto.animal.AnimalUpdateDTO;
+import AgroTrackpesagem.demo.mapperDto.animal.*;
+import AgroTrackpesagem.demo.mapperDto.surrounded.SurroundedDTO;
 import AgroTrackpesagem.demo.model.Animal;
 import AgroTrackpesagem.demo.model.Surrounded;
 import AgroTrackpesagem.demo.repository.AnimalRepository;
 import AgroTrackpesagem.demo.repository.SurroundedRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,6 +27,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class AnimalServiceTest {
@@ -48,7 +50,7 @@ class AnimalServiceTest {
                 .id(1L)
                 .tagIdentifier("A1")
                 .birthDate(date)
-                .breed(Breeds.ANGUS)
+                .breed(Breeds.NELORE)
                 .surrounded(surrounded)
                 .status(status)
                 .build();
@@ -90,7 +92,8 @@ class AnimalServiceTest {
     @DisplayName("Sucesso: Animals listados")
     void findAll() {
         List<Animal> animals = List.of(new Animal(), new Animal());
-        List<AnimalResponseDTO> animalsResponse = List.of(new AnimalResponseDTO(), new AnimalResponseDTO());
+        AnimalResponseDTO Animal = AnimalResponseDTO.builder().build();
+        List<AnimalResponseDTO> animalsResponse = List.of(Animal, Animal);
 
         Mockito.when(animalRepository.findAll()).thenReturn(animals);
         Mockito.when(mapper.toResponseDTOList(animals)).thenReturn(animalsResponse);
@@ -103,9 +106,9 @@ class AnimalServiceTest {
     }
 
     @Test
-    @DisplayName("Sucesso: Animal encotrado")
+    @DisplayName("Sucesso: Animal encontrado")
     void findById() {
-        AnimalResponseDTO responseMock = new AnimalResponseDTO();
+        AnimalResponseDTO responseMock = AnimalResponseDTO.builder().build();
         responseMock.setId(1L);
         responseMock.setTagIdentifier("A1");
 
@@ -121,8 +124,13 @@ class AnimalServiceTest {
 
     @Test
     @DisplayName("Validação: Impedir registro de animal morto")
-    void shouldReturnErrorWhenStatusIsDeceased(){
+    void preventRegistrationWhenStatusIsDeceased(){
         AnimalDTO animalDTO = createAnimalDTO(AnimalStatus.DECEASED);
+        Surrounded surrounded = createSurrounded(2, 1);
+        Animal animal = Animal.builder().status(AnimalStatus.DECEASED).build();
+
+        Mockito.when(surroundedService.isExist(1L)).thenReturn(surrounded);
+        Mockito.when(mapper.toEntity(animalDTO)).thenReturn(animal);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             animalService.create(animalDTO);
@@ -130,12 +138,12 @@ class AnimalServiceTest {
 
         System.out.print("Mensagem: "+ exception.getMessage() + "\n");
 
-        assertEquals("Não é possivel cadastrar animals falecidos", exception.getMessage());
+        assertEquals("Não é possivel cadastrar ou mudar animals falecidos", exception.getMessage());
     }
 
     @Test
     @DisplayName("Validação: Impedir registro em cercados cheios")
-    void shouldReturnErrorWhenSurroundedIsFull(){
+    void preventRegistrationWhenTheEnclosureIsFull(){
         Surrounded surroundedFull = createSurrounded(1, 1);
         AnimalDTO animalDTO = createAnimalDTO(AnimalStatus.ACTIVE);
         Mockito.when(surroundedService.isExist(any())).thenReturn(surroundedFull);
@@ -153,6 +161,7 @@ class AnimalServiceTest {
     void create() {
         Surrounded surrounded = createSurrounded(2, 0);
         Animal animal = new Animal();
+        AnimalResponseDTO Animaldto = AnimalResponseDTO.builder().build();
 
         AnimalDTO animalDTO = createAnimalDTO(AnimalStatus.ACTIVE);
         animalDTO.setSurrounded(surrounded.getId());
@@ -160,7 +169,7 @@ class AnimalServiceTest {
         Mockito.when(surroundedService.isExist(animalDTO.getId())).thenReturn(surrounded);
 
         Mockito.when(mapper.toEntity(animalDTO)).thenReturn(animal);
-        Mockito.when(mapper.toResponseDTO(any())).thenReturn(new AnimalResponseDTO());
+        Mockito.when(mapper.toResponseDTO(any())).thenReturn(Animaldto);
         Mockito.when(animalRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
 
         AnimalResponseDTO result = animalService.create(animalDTO);
@@ -170,15 +179,106 @@ class AnimalServiceTest {
     }
 
     @Test
+    @DisplayName("Sucesso: Animal Atualizado")
     void update() {
+        LocalDate date = LocalDate.of(2025, 1,30 );
+        AnimalUpdateDTO animalUp = AnimalUpdateDTO.builder()
+                .breed(Breeds.ANGUS)
+                .birthDate(date)
+                .build();
+        Animal animal = createAnimal(createSurrounded(1, 1), AnimalStatus.ACTIVE);
+        Mockito.when(animalRepository.findById(1L)).thenReturn(Optional.of(animal));
+
+        doAnswer(invocation -> {
+            AnimalUpdateDTO d = invocation.getArgument(0);
+            Animal e = invocation.getArgument(1);
+            e.setBreed(d.breed());
+            e.setBirthDate(d.birthDate());
+            return null;
+        }).when(mapper).updateEntityFromDTO(any(AnimalUpdateDTO.class), any(Animal.class));
+
+        Mockito.when(animalRepository.save(any(Animal.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        Mockito.when(mapper.toResponseDTO(any(Animal.class))).thenAnswer(i -> {
+            Animal e = i.getArgument(0);
+            return AnimalResponseDTO.builder().breed(e.getBreed()).birthDate(e.getBirthDate()).build();
+        });
+
+
+        AnimalResponseDTO result = animalService.update(1L, animalUp);
+
+        assertNotNull(result);
+        assertEquals(Breeds.ANGUS, result.getBreed());
+        assertEquals(date, result.getBirthDate());
+        Mockito.verify(animalRepository).save(animal);
+    }
+
+    @Test
+    @DisplayName("Validação: Impedir mudança para cercados cheios")
+    void preventMovementIntoCrowdedArea(){
+        Long idAnimal = 1L;
+        Long idSurrounded = 10L;
+
+        Animal animal = Animal.builder().
+                id(idAnimal)
+                .status(AnimalStatus.ACTIVE)
+                .build();
+        AnimalDTO animalDTO = new AnimalDTO();
+
+        Surrounded surroundedFull = createSurrounded(1, 1);
+
+        AnimalSurroundedMoveDTO moveAnimal = AnimalSurroundedMoveDTO.builder()
+                .surrounded(idSurrounded)
+                .build();
+
+        Mockito.when(animalRepository.findById(1L)).thenReturn(Optional.of(animal));
+        Mockito.when(surroundedService.isExist(any())).thenReturn(surroundedFull);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () ->{
+            animalService.moveAnimal(idAnimal, moveAnimal);
+        });
+
+        System.out.print("Mensagem: "+ exception.getMessage()+ "\n");
+        assertEquals("O piquete selecionado já atingiu a capacidade máxima", exception.getMessage());
 
     }
 
     @Test
+    @DisplayName("Validação: Impedir mudança de animais falecidos")
+    void toPreventTheMovementOfDeceased(){
+        Long idAnimal = 1L;
+        Long idSurrounded = 10L;
+
+        Animal animal = Animal.builder()
+                .id(idAnimal)
+                .status(AnimalStatus.DECEASED)
+                .build();
+
+        AnimalSurroundedMoveDTO moveAnimal = AnimalSurroundedMoveDTO.builder()
+                .surrounded(idSurrounded)
+                .build();
+
+        Mockito.when(animalRepository.findById(1L)).thenReturn(Optional.of(animal));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () ->{
+            animalService.moveAnimal(idAnimal, moveAnimal);
+        });
+
+        System.out.print("Mensagem: "+ exception.getMessage()+ "\n");
+        assertEquals("Não é possivel cadastrar ou mudar animals falecidos", exception.getMessage());
+
+    }
+
+
+    @Test
+    @DisplayName("Sucesso: Animal movido de piquete")
     void moveAnimal() {
+
+
     }
 
     @Test
     void updateStatus() {
+
     }
 }

@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.List;
 
 @Service
@@ -28,8 +29,10 @@ public class AnimalService {
 
     @Transactional
     public AnimalResponseDTO create(AnimalDTO dto){
-        Surrounded surrounded = validateEntryConditions(dto);
+        Surrounded surrounded = fetchEmptySurround(dto.getSurrounded());
         Animal animal = mapper.toEntity(dto);
+        animalIsLive(animal);
+
         animal.setSurrounded(surrounded);
         return mapper.toResponseDTO(repository.save(animal));
     }
@@ -43,10 +46,8 @@ public class AnimalService {
 
     @Transactional
     public AnimalResponseDTO moveAnimal(Long idAnimal, AnimalSurroundedMoveDTO dto) {
-        isExist(idAnimal);
-        Surrounded surrounded = surroundedService.isExist(dto.surrounded());
-
-        Animal entity = repository.findByIdObject(idAnimal);
+        Animal entity = getActiveById(idAnimal);
+        Surrounded surrounded = fetchEmptySurround(dto.surrounded());
         entity.setSurrounded(surrounded);
 
         return mapper.toResponseDTO(repository.save(entity));
@@ -69,14 +70,9 @@ public class AnimalService {
         return mapper.toResponseDTO(repository.save(entity));
     }
 
-    public Surrounded validateEntryConditions(AnimalDTO dto) {
-
-        Surrounded surrounded = surroundedService.isExist(dto.getSurrounded());
-
-        if (dto.getStatus() == AnimalStatus.DECEASED) {
-            throw new RuntimeException(
-                    "Não é possivel cadastrar animals falecidos");
-        }
+    //confere se o cercado esta chei0
+    public Surrounded fetchEmptySurround(Long id) {
+        Surrounded surrounded = surroundedService.isExist(id);
 
         long totalAnimal = surrounded.getAnimals().stream()
                 .filter(a -> a.getStatus() != AnimalStatus.DECEASED)
@@ -92,6 +88,20 @@ public class AnimalService {
     public Animal isExist(Long idAnimal){
         return repository.findById(idAnimal)
                 .orElseThrow(() -> new RuntimeException("Animal não encontrado com o ID " + idAnimal));
+    }
+
+    // retorna só animais vivos
+    public Animal getActiveById(Long id) {
+        Animal entity = isExist(id);
+        animalIsLive(entity);
+
+        return entity;
+    }
+
+    public void animalIsLive(Animal animal){
+        if (animal.getStatus() == AnimalStatus.DECEASED) {
+            throw new RuntimeException("Não é possivel cadastrar ou mudar animals falecidos");
+        }
     }
 
 

@@ -20,10 +20,9 @@ public  interface AnimalMapper extends MapperGeneric<AnimalDTO, Animal>{
     @Mapping(target = "surrounded", ignore = true)
     void updateEntityFromDTO(AnimalDTO dto, @MappingTarget Animal entity);
 
-
     void updateEntityFromDTO(AnimalUpdateDTO dto, @MappingTarget Animal entity);
 
-    Animal toEntityRes(AnimalResponseDTO dto);
+    AnimalDTO toDtoMove(AnimalSurroundedMoveDTO dto);
     AnimalResponseDTO toResponseDTO(Animal entity);
     List<AnimalResponseDTO> toResponseDTOList(List<Animal> entities);
 }

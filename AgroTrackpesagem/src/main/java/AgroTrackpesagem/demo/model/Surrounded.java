@@ -36,4 +36,5 @@ public class Surrounded {
     @OneToMany(mappedBy = "surrounded", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Animal> animals = new ArrayList<>();
+
 }
