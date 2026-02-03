@@ -27,8 +27,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AnimalServiceTest {
@@ -138,7 +137,8 @@ class AnimalServiceTest {
 
         System.out.print("Mensagem: "+ exception.getMessage() + "\n");
 
-        assertEquals("Não é possivel cadastrar ou mudar animals falecidos", exception.getMessage());
+        assertEquals("Não é possível cadastrar, alocar ou alterar o status de animais falecidos.", exception.getMessage());
+        Mockito.verify(animalRepository, never()).save(any());
     }
 
     @Test
@@ -154,6 +154,7 @@ class AnimalServiceTest {
 
         System.out.print("Mensagem: "+ exception.getMessage()+ "\n");
         assertEquals("O piquete selecionado já atingiu a capacidade máxima", exception.getMessage());
+        Mockito.verify(animalRepository, never()).save(any());
     }
 
     @Test
@@ -240,6 +241,7 @@ class AnimalServiceTest {
 
         System.out.print("Mensagem: "+ exception.getMessage()+ "\n");
         assertEquals("O piquete selecionado já atingiu a capacidade máxima", exception.getMessage());
+        Mockito.verify(animalRepository, never()).save(any());
 
     }
 
@@ -265,7 +267,8 @@ class AnimalServiceTest {
         });
 
         System.out.print("Mensagem: "+ exception.getMessage()+ "\n");
-        assertEquals("Não é possivel cadastrar ou mudar animals falecidos", exception.getMessage());
+        assertEquals("Não é possível cadastrar, alocar ou alterar o status de animais falecidos.", exception.getMessage());
+        Mockito.verify(animalRepository, never()).save(any());
 
     }
 
@@ -273,12 +276,48 @@ class AnimalServiceTest {
     @Test
     @DisplayName("Sucesso: Animal movido de piquete")
     void moveAnimal() {
+        Long idAnimal = 1L;
+        Long idSurrounded = 10L;
 
+        Animal animal = Animal.builder().status(AnimalStatus.ACTIVE).build();
+        Surrounded surrounded = createSurrounded(2, 1);
 
+        AnimalResponseDTO animalResponseDTO = AnimalResponseDTO.builder().build();
+        AnimalSurroundedMoveDTO animaMove = AnimalSurroundedMoveDTO.builder().
+                surrounded(idSurrounded)
+                .build();
+
+        Mockito.when(animalRepository.findById(idAnimal)).thenReturn(Optional.of(animal));
+        Mockito.when(surroundedService.isExist(idSurrounded)).thenReturn(surrounded);
+
+        Mockito.when(animalRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
+        Mockito.when(mapper.toResponseDTO(animal)).thenReturn(animalResponseDTO);
+
+        AnimalResponseDTO result = animalService.moveAnimal(idAnimal, animaMove);
+
+        assertNotNull(result);
+        assertEquals(surrounded.getId(), animal.getSurrounded().getId());
+        Mockito.verify(animalRepository).save(animal);
     }
 
     @Test
+    @DisplayName("Sucesso: Status Atualizado")
     void updateStatus() {
+        Long idAnimal = 1L;
+        Animal animal = Animal.builder().status(AnimalStatus.ACTIVE).build();
+        AnimalResponseDTO animalResponseDTO = AnimalResponseDTO.builder().status(AnimalStatus.SOLD).build();
+
+        UpdateAnimalStatusDTO updateStatus = new UpdateAnimalStatusDTO(AnimalStatus.SOLD);
+
+        Mockito.when(animalRepository.findById(idAnimal)).thenReturn(Optional.of(animal));
+        Mockito.when(animalRepository.save(any(Animal.class))).thenAnswer(i-> i.getArguments()[0]);
+        Mockito.when(mapper.toResponseDTO(any(Animal.class))).thenReturn(animalResponseDTO);
+
+        AnimalResponseDTO result = animalService.updateStatus(idAnimal, updateStatus);
+
+        assertNotNull(result);
+        assertEquals(updateStatus.status(), result.getStatus());
+        Mockito.verify(animalRepository).save(animal);
 
     }
 }

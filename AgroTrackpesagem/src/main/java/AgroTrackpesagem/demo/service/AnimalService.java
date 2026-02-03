@@ -56,15 +56,7 @@ public class AnimalService {
     @Transactional
     public AnimalResponseDTO updateStatus(Long idAnimal, UpdateAnimalStatusDTO dto){
         Animal entity = isExist(idAnimal);
-
-        if (entity.getStatus() == AnimalStatus.DECEASED) {
-            throw new RuntimeException("Não é possível alterar o status de um animal que já consta como morto.");
-        }
-
-        if(!entity.getStatus().canTransitionTo(dto.status())){
-            throw new RuntimeException("Transição de status inválida");
-        }
-
+        animalIsLive(entity);
         entity.setStatus(dto.status());
 
         return mapper.toResponseDTO(repository.save(entity));
@@ -100,7 +92,7 @@ public class AnimalService {
 
     public void animalIsLive(Animal animal){
         if (animal.getStatus() == AnimalStatus.DECEASED) {
-            throw new RuntimeException("Não é possivel cadastrar ou mudar animals falecidos");
+            throw new RuntimeException("Não é possível cadastrar, alocar ou alterar o status de animais falecidos.");
         }
     }
 

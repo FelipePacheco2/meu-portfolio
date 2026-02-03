@@ -37,7 +37,9 @@ public class AnimalController {
 
 
     @PutMapping("/{idAnimal}/update/all")
-    public ResponseEntity<EntityModel<AnimalResponseDTO>> update(@PathVariable Long idAnimal, @RequestBody AnimalUpdateDTO dto){
+    public ResponseEntity<EntityModel<AnimalResponseDTO>> update(
+            @PathVariable Long idAnimal,
+            @RequestBody AnimalUpdateDTO dto){
         return ResponseEntity.ok(
                 assembler.toModel(service.update(idAnimal, dto)));
     }
