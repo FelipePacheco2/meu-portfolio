@@ -1,18 +1,18 @@
 package AgroTrackpesagem.demo.controller;
 
 import AgroTrackpesagem.demo.assembler.surrounded.SurroundedAssembler;
+import AgroTrackpesagem.demo.mapperDto.animal.AnimalDTO;
 import AgroTrackpesagem.demo.mapperDto.animal.AnimalResponseDTO;
+import AgroTrackpesagem.demo.mapperDto.surrounded.SurroundedDTO;
 import AgroTrackpesagem.demo.mapperDto.surrounded.SurroundedResponseDTO;
 import AgroTrackpesagem.demo.service.SurroundedService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +31,11 @@ public class SurroundedController {
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<SurroundedResponseDTO>> getById(@PathVariable Long id) {
         return ResponseEntity.ok(assembler.toModel(service.findById(id)));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<EntityModel<SurroundedResponseDTO>> create(@RequestBody SurroundedDTO dto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(assembler.toModel(service.create(dto)));
     }
 
 }

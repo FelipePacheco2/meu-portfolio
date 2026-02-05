@@ -13,7 +13,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class SurroundedAssembler extends RepresentationModelAssemblerSupport<SurroundedResponseDTO, EntityModel<SurroundedResponseDTO>> {
+public class SurroundedAssembler extends
+        RepresentationModelAssemblerSupport<SurroundedResponseDTO, EntityModel<SurroundedResponseDTO>> {
 
         public SurroundedAssembler() {
         super(SurroundedMapper.class, (Class<EntityModel<SurroundedResponseDTO>>) (Class<?>) EntityModel.class);
@@ -23,7 +24,8 @@ public class SurroundedAssembler extends RepresentationModelAssemblerSupport<Sur
         public EntityModel<SurroundedResponseDTO> toModel (SurroundedResponseDTO dto){
         return EntityModel.of(dto,
                 linkTo(methodOn(SurroundedController.class).getById(dto.getId())).withSelfRel().withType("GET"),
-                linkTo(methodOn(SurroundedController.class).listAll()).withRel("all-surrounded").withType("GET")
+                linkTo(methodOn(SurroundedController.class).listAll()).withRel("all-surrounded").withType("GET"),
+                linkTo(methodOn(SurroundedController.class).create(null)).withRel("create-surrounded").withType("POST")
         );
     }
 
