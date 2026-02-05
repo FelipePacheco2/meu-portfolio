@@ -1,0 +1,1 @@
+ALTER TABLE surrounded MODIFY COLUMN max_capacity BIGINT NOT NULL;

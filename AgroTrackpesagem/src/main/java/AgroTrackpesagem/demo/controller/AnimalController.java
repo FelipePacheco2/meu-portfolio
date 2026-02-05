@@ -35,7 +35,6 @@ public class AnimalController {
         return ResponseEntity.status(HttpStatus.CREATED).body(assembler.toModel(service.create(dto)));
     }
 
-
     @PutMapping("/{idAnimal}/update/all")
     public ResponseEntity<EntityModel<AnimalResponseDTO>> update(
             @PathVariable Long idAnimal,
@@ -61,4 +60,9 @@ public class AnimalController {
                 assembler.toModel(service.updateStatus(idAnimal, dto)));
     }
 
+    @DeleteMapping("/{idAnimal}/delete")
+    public ResponseEntity<Void> delete(@PathVariable Long idAnimal){
+        service.delete(idAnimal);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -96,5 +96,9 @@ public class AnimalService {
         }
     }
 
+    public void delete(Long idAnimal){
+        repository.deleteById(idAnimal);
+    }
+
 
 }

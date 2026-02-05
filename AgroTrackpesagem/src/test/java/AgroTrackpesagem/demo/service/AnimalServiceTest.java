@@ -4,12 +4,10 @@ import AgroTrackpesagem.demo.enums.AnimalStatus;
 import AgroTrackpesagem.demo.enums.Breeds;
 import AgroTrackpesagem.demo.enums.PaddockType;
 import AgroTrackpesagem.demo.mapperDto.animal.*;
-import AgroTrackpesagem.demo.mapperDto.surrounded.SurroundedDTO;
 import AgroTrackpesagem.demo.model.Animal;
 import AgroTrackpesagem.demo.model.Surrounded;
 import AgroTrackpesagem.demo.repository.AnimalRepository;
 import AgroTrackpesagem.demo.repository.SurroundedRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +15,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.test.web.servlet.MockMvc;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,9 +30,17 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class AnimalServiceTest {
+
+    @Autowired
+    private MockMvc mockMvc;
     @Mock
     private AnimalMapper mapper;
     @Mock
@@ -68,7 +78,7 @@ class AnimalServiceTest {
                 .build();
     }
 
-    private Surrounded createSurrounded(int limit, int busy){
+    private Surrounded createSurrounded(Long limit, int busy){
         LocalDateTime dateTime = LocalDateTime.of(2026, 2, 1, 14, 30);
         List<Animal> existingAnimals = new ArrayList<>();
 
@@ -125,10 +135,10 @@ class AnimalServiceTest {
     @DisplayName("Validação: Impedir registro de animal morto")
     void preventRegistrationWhenStatusIsDeceased(){
         AnimalDTO animalDTO = createAnimalDTO(AnimalStatus.DECEASED);
-        Surrounded surrounded = createSurrounded(2, 1);
+        Surrounded surrounded = createSurrounded(2L, 1);
         Animal animal = Animal.builder().status(AnimalStatus.DECEASED).build();
 
-        Mockito.when(surroundedService.isExist(1L)).thenReturn(surrounded);
+        Mockito.when(surroundedService.fetchEmptySurround(1L)).thenReturn(surrounded);
         Mockito.when(mapper.toEntity(animalDTO)).thenReturn(animal);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
@@ -144,9 +154,9 @@ class AnimalServiceTest {
     @Test
     @DisplayName("Validação: Impedir registro em cercados cheios")
     void preventRegistrationWhenTheEnclosureIsFull(){
-        Surrounded surroundedFull = createSurrounded(1, 1);
+        Surrounded surroundedFull = createSurrounded(1L, 1);
         AnimalDTO animalDTO = createAnimalDTO(AnimalStatus.ACTIVE);
-        Mockito.when(surroundedService.isExist(any())).thenReturn(surroundedFull);
+        Mockito.when(surroundedService.fetchEmptySurround(any())).thenReturn(surroundedFull);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () ->{
             animalService.create(animalDTO);
@@ -160,14 +170,14 @@ class AnimalServiceTest {
     @Test
     @DisplayName("Sucesso: Animal registrado")
     void create() {
-        Surrounded surrounded = createSurrounded(2, 0);
+        Surrounded surrounded = createSurrounded(2L, 0);
         Animal animal = new Animal();
         AnimalResponseDTO Animaldto = AnimalResponseDTO.builder().build();
 
         AnimalDTO animalDTO = createAnimalDTO(AnimalStatus.ACTIVE);
         animalDTO.setSurrounded(surrounded.getId());
 
-        Mockito.when(surroundedService.isExist(animalDTO.getId())).thenReturn(surrounded);
+        Mockito.when(surroundedService.fetchEmptySurround(surrounded.getId())).thenReturn(surrounded);
 
         Mockito.when(mapper.toEntity(animalDTO)).thenReturn(animal);
         Mockito.when(mapper.toResponseDTO(any())).thenReturn(Animaldto);
@@ -187,7 +197,7 @@ class AnimalServiceTest {
                 .breed(Breeds.ANGUS)
                 .birthDate(date)
                 .build();
-        Animal animal = createAnimal(createSurrounded(1, 1), AnimalStatus.ACTIVE);
+        Animal animal = createAnimal(createSurrounded(1L, 1), AnimalStatus.ACTIVE);
         Mockito.when(animalRepository.findById(1L)).thenReturn(Optional.of(animal));
 
         doAnswer(invocation -> {
@@ -226,7 +236,7 @@ class AnimalServiceTest {
                 .build();
         AnimalDTO animalDTO = new AnimalDTO();
 
-        Surrounded surroundedFull = createSurrounded(1, 1);
+        Surrounded surroundedFull = createSurrounded(1L, 1);
 
         AnimalSurroundedMoveDTO moveAnimal = AnimalSurroundedMoveDTO.builder()
                 .surrounded(idSurrounded)
@@ -280,7 +290,7 @@ class AnimalServiceTest {
         Long idSurrounded = 10L;
 
         Animal animal = Animal.builder().status(AnimalStatus.ACTIVE).build();
-        Surrounded surrounded = createSurrounded(2, 1);
+        Surrounded surrounded = createSurrounded(2L, 1);
 
         AnimalResponseDTO animalResponseDTO = AnimalResponseDTO.builder().build();
         AnimalSurroundedMoveDTO animaMove = AnimalSurroundedMoveDTO.builder().
@@ -288,7 +298,7 @@ class AnimalServiceTest {
                 .build();
 
         Mockito.when(animalRepository.findById(idAnimal)).thenReturn(Optional.of(animal));
-        Mockito.when(surroundedService.isExist(idSurrounded)).thenReturn(surrounded);
+        Mockito.when(surroundedService.fetchEmptySurround(idSurrounded)).thenReturn(surrounded);
 
         Mockito.when(animalRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
         Mockito.when(mapper.toResponseDTO(animal)).thenReturn(animalResponseDTO);
@@ -320,4 +330,14 @@ class AnimalServiceTest {
         Mockito.verify(animalRepository).save(animal);
 
     }
+
+    @Test
+    @DisplayName("Sucesso: Animal Deletado")
+    void deleteAnimal() throws Exception {
+        Long idAnimal = 1L;
+
+        animalService.delete(idAnimal);
+        verify(animalRepository, times(1)).deleteById(idAnimal);
+    }
+
 }

@@ -35,7 +35,8 @@ public class AnimalAssembler extends RepresentationModelAssemblerSupport<AnimalR
                 linkTo(controller.create(null)).withRel("create-animal").withType("POST"),
                 linkTo(controller.update(dto.getId(), null)).withRel("Update-animal").withType("PUT"),
                 linkTo(controller.moveAnimal(dto.getId(), new AnimalSurroundedMoveDTO(null))).withRel("move-animal").withType("PUT"),
-                linkTo(controller.updateStatus(dto.getId(), null)).withRel("update-status").withType("PUT")
+                linkTo(controller.updateStatus(dto.getId(), null)).withRel("update-status").withType("PUT"),
+                linkTo(controller.delete(dto.getId())).withRel("delete-animal").withType("DELETE")
         );
         if (dto.getSurrounded() != null) {
 

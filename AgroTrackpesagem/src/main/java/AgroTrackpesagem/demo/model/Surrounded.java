@@ -27,7 +27,7 @@ public class Surrounded {
     private String name;
 
     @Column(name="max_capacity", nullable = false)
-    private Integer maxCapacity;
+    private Long maxCapacity;
 
     @CreationTimestamp
     @Column(name="create_date", updatable = false)

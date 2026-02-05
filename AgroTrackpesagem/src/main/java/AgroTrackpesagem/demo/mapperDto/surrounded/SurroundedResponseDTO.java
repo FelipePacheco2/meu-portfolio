@@ -15,6 +15,6 @@ public class SurroundedResponseDTO {
     private PaddockType type;
     private String name;
     private LocalDateTime createAt;
-    private Integer maxCapacity;
-    private List<Animal> animals = new ArrayList<>();
+    private Long maxCapacity;
+    private Long CurrentCount;
 }

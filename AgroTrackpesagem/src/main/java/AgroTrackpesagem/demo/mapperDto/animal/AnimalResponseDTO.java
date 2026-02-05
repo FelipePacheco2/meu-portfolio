@@ -19,6 +19,5 @@ public class AnimalResponseDTO {
         private SurroundedDTO surrounded;
         private Breeds breed;
         private AnimalStatus status;
-
 }
 

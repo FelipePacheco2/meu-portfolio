@@ -23,7 +23,7 @@ public class SurroundedAssembler extends RepresentationModelAssemblerSupport<Sur
         public EntityModel<SurroundedResponseDTO> toModel (SurroundedResponseDTO dto){
         return EntityModel.of(dto,
                 linkTo(methodOn(SurroundedController.class).getById(dto.getId())).withSelfRel().withType("GET"),
-                linkTo(methodOn(SurroundedController.class).listAll()).withRel("all-animals").withType("GET")
+                linkTo(methodOn(SurroundedController.class).listAll()).withRel("all-surrounded").withType("GET")
         );
     }
 

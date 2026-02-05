@@ -23,7 +23,7 @@ public class SurroundedController {
     private final SurroundedService service;
     private final SurroundedAssembler assembler;
 
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity<CollectionModel<EntityModel<SurroundedResponseDTO>>> listAll(){
         return ResponseEntity.ok(assembler.toCollectionModel(service.listAll()));
     }
@@ -32,6 +32,5 @@ public class SurroundedController {
     public ResponseEntity<EntityModel<SurroundedResponseDTO>> getById(@PathVariable Long id) {
         return ResponseEntity.ok(assembler.toModel(service.findById(id)));
     }
-
 
 }
