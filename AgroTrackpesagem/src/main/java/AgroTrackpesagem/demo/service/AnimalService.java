@@ -82,6 +82,11 @@ public class AnimalService {
                 .orElseThrow(() -> new RuntimeException("Animal não encontrado com o ID " + idAnimal));
     }
 
+    public Animal isExistTag(String tag){
+        return repository.findByTag(tag)
+                .orElseThrow(() -> new RuntimeException("Animal não encontrado com a tag" + tag));
+    }
+
     // retorna só animais vivos
     public Animal getActiveById(Long id) {
         Animal entity = isExist(id);

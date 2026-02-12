@@ -1,0 +1,1 @@
+ALTER TABLE weighing MODIFY COLUMN weight_date DATETIME NOT NULL;

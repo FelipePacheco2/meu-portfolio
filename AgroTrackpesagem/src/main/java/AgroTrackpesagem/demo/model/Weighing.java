@@ -2,8 +2,10 @@ package AgroTrackpesagem.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="weighing")
@@ -21,10 +23,11 @@ public class Weighing {
     @Column(name="weight", nullable = false)
     private double weight;
 
+    @CreationTimestamp
     @Column(name="weight_date", nullable = false, updatable = false)
-    private LocalDate weightDate;
+    private LocalDateTime weightDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "animal_id", nullable = false, updatable = false)
+    @JoinColumn(name = "animal_id", nullable = false)
     private Animal animal;
 }
