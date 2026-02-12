@@ -2,7 +2,8 @@ package AgroTrackpesagem.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name="weighing")
@@ -21,7 +22,7 @@ public class Weighing {
     private double weight;
 
     @Column(name="weight_date", nullable = false, updatable = false)
-    private LocalDateTime weightDate;
+    private LocalDate weightDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "animal_id", nullable = false, updatable = false)

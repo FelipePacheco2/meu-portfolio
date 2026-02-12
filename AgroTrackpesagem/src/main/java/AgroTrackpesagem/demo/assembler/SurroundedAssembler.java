@@ -22,10 +22,13 @@ public class SurroundedAssembler extends
 
         @Override
         public EntityModel<SurroundedResponseDTO> toModel (SurroundedResponseDTO dto){
+            SurroundedController controller = methodOn(SurroundedController.class);
         return EntityModel.of(dto,
-                linkTo(methodOn(SurroundedController.class).getById(dto.getId())).withSelfRel().withType("GET"),
-                linkTo(methodOn(SurroundedController.class).listAll()).withRel("all-surrounded").withType("GET"),
-                linkTo(methodOn(SurroundedController.class).create(null)).withRel("create-surrounded").withType("POST")
+                linkTo(controller.getById(dto.getId())).withSelfRel().withType("GET"),
+                linkTo(controller.listAll()).withRel("all-surrounded").withType("GET"),
+                linkTo(controller.create(null)).withRel("create-surrounded").withType("POST"),
+                linkTo(controller.update(dto.getId(), null)).withRel("update-surrounded").withType("PUT"),
+                linkTo(controller.delete(dto.getId())).withRel("delete-surrounded").withType("DELETE")
         );
     }
 

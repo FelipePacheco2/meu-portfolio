@@ -45,6 +45,16 @@ public class SurroundedService {
         return setAmountAnimal(repository.save(surrounded));
     }
 
+    public SurroundedResponseDTO update(SurroundedDTO dto, Long id){
+        Surrounded entity = isExist(id);
+        mapper.updateEntityFromDTO(dto, entity);
+        return mapper.toResponseDTO(repository.save(entity));
+    }
+
+    public void delete(Long id){
+        repository.deleteById(id);
+    }
+
     public SurroundedResponseDTO setAmountAnimal(Surrounded surrounded){
         SurroundedResponseDTO surroundedR = mapper.toResponseDTO(surrounded);
         surroundedR.setCurrentCount(amountAnimal(surrounded));

@@ -38,4 +38,17 @@ public class SurroundedController {
         return ResponseEntity.status(HttpStatus.CREATED).body(assembler.toModel(service.create(dto)));
     }
 
+    @PutMapping("/{id}/update")
+    public ResponseEntity<EntityModel<SurroundedResponseDTO>> update(
+            @PathVariable Long id,
+            @RequestBody SurroundedDTO dto){
+        return ResponseEntity.ok(assembler.toModel(service.update(dto, id)));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
