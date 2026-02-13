@@ -4,6 +4,8 @@ package AgroTrackpesagem.demo.controller;
 import AgroTrackpesagem.demo.assembler.AnimalAssembler;
 import AgroTrackpesagem.demo.mapperDto.animal.*;
 import AgroTrackpesagem.demo.service.AnimalService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -16,6 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/animals")
+@Tag(name = "Animal", description = "Controle de identificação, localização e dados genéticos do rebanho.")
 public class AnimalController {
     private final AnimalService service;
     private final AnimalAssembler assembler;

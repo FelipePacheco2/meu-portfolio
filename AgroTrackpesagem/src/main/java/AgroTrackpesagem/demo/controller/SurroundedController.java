@@ -6,6 +6,7 @@ import AgroTrackpesagem.demo.mapperDto.animal.AnimalResponseDTO;
 import AgroTrackpesagem.demo.mapperDto.surrounded.SurroundedDTO;
 import AgroTrackpesagem.demo.mapperDto.surrounded.SurroundedResponseDTO;
 import AgroTrackpesagem.demo.service.SurroundedService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
@@ -17,8 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/piquetes")
+@RequestMapping("/surrounded")
 @RequiredArgsConstructor
+@Tag(name = "Surrounded", description = "Gestão de áreas de confinamento, monitoramento de lotação e capacidade.")
 public class SurroundedController {
     private final SurroundedService service;
     private final SurroundedAssembler assembler;

@@ -10,6 +10,7 @@ import AgroTrackpesagem.demo.model.Surrounded;
 import AgroTrackpesagem.demo.repository.SurroundedRepository;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,12 +40,14 @@ public class SurroundedService {
         return setAmountAnimal(surrounded);
     }
 
+    @Transactional
     public SurroundedResponseDTO create(SurroundedDTO dto){
         Surrounded surrounded = mapper.toEntity(dto);
         surrounded.setMaxCapacity(dto.getMaxCapacity());
         return setAmountAnimal(repository.save(surrounded));
     }
 
+    @Transactional
     public SurroundedResponseDTO update(SurroundedDTO dto, Long id){
         Surrounded entity = isExist(id);
         mapper.updateEntityFromDTO(dto, entity);

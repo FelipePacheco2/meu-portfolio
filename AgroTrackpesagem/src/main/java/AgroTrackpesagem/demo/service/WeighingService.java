@@ -6,6 +6,7 @@ import AgroTrackpesagem.demo.mapperDto.weighing.WeighingResponseDTO;
 import AgroTrackpesagem.demo.model.Animal;
 import AgroTrackpesagem.demo.model.Weighing;
 import AgroTrackpesagem.demo.repository.WeighingRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ public class WeighingService {
         return mapper.toListResponse(repository.findAllRegisterWeighing(animal.getId()));
     }
 
-
+    @Transactional
     public WeighingResponseDTO create(WeighingDTO dto){
         Animal animal = serviceAnimal.isExistTag(dto.tag());
         serviceAnimal.animalIsLive(animal);
